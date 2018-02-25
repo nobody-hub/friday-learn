@@ -20,26 +20,26 @@ sudo apt-get install oracle-java8-set-default -y
 sudo java -version
 
 #######
-# ZooKeeper
+# Zookeeper
 #######
-# Install ZooKeeper to maintain configuration information, provide distributed synchronization, naming and provide group services.
-sudo apt-get install zookeeperd -y
+# Install Zookeeper to maintain configuration information, provide distributed synchronization, naming and provide group services.
+sudo apt-get install zookeeper -y
 
 # Start server
 /usr/share/zookeeper/bin/zkServer.sh start
 
 # Check server status
-/usr/share/zookeeper/bin/zkServer.sh status
-
-# Check ZooKeeper
-netstat -ant | grep :2181
+#/usr/share/zookeeper/bin/zkServer.sh status
 
 # Check Zookeeper
-telnet localhost 2181
-srvr
+#netstat -ant | grep :2181
+
+# Check Zookeeper
+#telnet localhost 2181
+#srvr
 
 # Check the configuration, location given by `dpkg -L zookeeper`
-cat /etc/zookeeper/conf/zoo.cfg
+#cat /etc/zookeeper/conf/zoo.cfg
 
 #######
 # Kafka
@@ -54,4 +54,19 @@ sudo mkdir /opt/Kafka
 sudo tar -xvf kafka_2.11-1.0.0.tgz -C /opt/Kafka/
 
 # Start Kafka Server
-#sudo  /opt/Kafka/kafka_2.11-1.0.0/bin/kafka-server-start.sh /opt/Kafka/kafka_2.10-0.10.0.1/config/server.properties
+sudo /opt/Kafka/kafka_2.11-1.0.0/bin/kafka-server-start.sh -daemon /opt/Kafka/kafka_2.11-1.0.0/config/server.properties
+
+#######
+# Verify Kafka
+#######
+# Create a test topic
+#/opt/Kafka/kafka_2.11-1.0.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+
+# Show information of test topic
+#/opt/Kafka/kafka_2.11-1.0.0/bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic test
+
+# Produce messages to a test topic
+#/opt/Kafka/kafka_2.11-1.0.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+
+# Consume messages from a test topic
+#/opt/Kafka/kafka_2.11-1.0.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
