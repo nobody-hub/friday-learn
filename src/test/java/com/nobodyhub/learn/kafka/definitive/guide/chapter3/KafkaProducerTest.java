@@ -1,27 +1,25 @@
 package com.nobodyhub.learn.kafka.definitive.guide.chapter3;
 
-import org.apache.kafka.clients.producer.*;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
  * @author Ryan
  */
-public class KafkaProducerTest {
-    private Properties producerProps;
-    private Producer producer;
+public class KafkaProducerTest extends ProducerTestBase {
     private ProducerRecord<String, String> record;
 
+    @Override
     @Before
     public void setup() {
-        initProducerProperties();
-        this.producer = new KafkaProducer<String, String>(this.producerProps);
-        this.record = new ProducerRecord<>("CustomerCountry", "Precision Products", "France");
+        super.setup();
+        this.record = new ProducerRecord<>(TOPIC, "Precision Products", "France");
     }
 
     @Test
@@ -56,13 +54,5 @@ public class KafkaProducerTest {
     public void testAsynchronouslys() {
         producer.send(record, new ProducerCallBack());
 //        producer.flush();
-    }
-
-
-    private void initProducerProperties() {
-        this.producerProps = new Properties();
-        this.producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        this.producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        this.producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
     }
 }
